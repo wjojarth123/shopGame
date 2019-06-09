@@ -29,9 +29,9 @@ class Trader:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_RETURN:
 				print(text)
-				if text in self.prices:
-					priceOfitem=self.prices[text]
-					self.item=text
+				if text.title() in self.prices:
+					priceOfitem=self.prices[text.title()]
+					self.item=text.title()
 					print('Just set trader item to: ' + self.item)
 					print(text)
 
@@ -48,7 +48,7 @@ text=''
 def generateTrader(x, y, possibleFoods):
 	traderPrices = {}
 	for food in possibleFoods:
-		traderPrices[food] = random.randrange(0,20)
+		traderPrices[food] = random.randrange(10,50)
 	trader = Trader(traderPrices,x,y)
 	return trader
 def trade(trader, screen):

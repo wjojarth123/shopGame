@@ -9,26 +9,51 @@ selectedtrader=0
 pygame.init()
 buyrect=pygame.Rect(650,60,80,30)
 screen = pygame.display.set_mode((800, 600))
-mealList=['Bread','Potatoes']
+mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice cream','Sushi','Chicken','Roast Beef']
 possibleFoods = ['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice cream','Sushi','Chicken','Roast Beef']
 Done=False
 readyToServe = False
 timeLastServed=time.time()
 servingSpeed=1
-money=0
+money=100
+
 pygame.font.init()
 myfont=pygame.font.SysFont('Times New Roman',24)
 stock =	{
   "Potatoes": 5,
-  "Bread": 6
+  "Bread": 6,
+  'Waffles':0,
+  'Spaghetti': 0,
+  'Soup': 0,
+  'Pizza': 0,
+  'Ice cream': 0,
+  'Sushi': 0,
+  'Chicken': 0,
+  'Roast Beef': 0
 }
 prices =	{
   "Potatoes": 3,
-  "Bread": 5
+  "Bread": 5,
+  'Waffles':0,
+  'Spaghetti':0,
+  'Soup':0,
+  'Pizza':0,
+  'Ice cream':0,
+  'Sushi':0,
+  'Chicken':0,
+  'Roast Beef':0
 }
 rationalPrices =	{
   "Potatoes": 5,
-  "Bread": 5
+  "Bread": 5,
+  'Waffles':10,
+  'Spaghetti':10,
+  'Soup':5,
+  'Pizza':10,
+  'Ice cream':5,
+  'Sushi':5,
+  'Chicken':10,
+  'Roast Beef':10
 }
 #sustomerState = Enum('CustomerState', 'onStreet goingToShop waiting leavingShop')
 
@@ -36,28 +61,28 @@ rationalPrices =	{
 customers = []
 
 def drawSlider(food, mousePos, clickedOn):
-	rect=pygame.Rect(5,(possibleFoods.index(food)+1)*75,150,10)
+	rect=pygame.Rect(5,(possibleFoods.index(food)+1)*25+160,150,10)
 	textsurface=myfont.render(food+" , "+str(prices[food]),False,(255,255,255))
-	screen.blit(textsurface,(50,(possibleFoods.index(food)+1)*75+20))
+	screen.blit(textsurface,(50,(possibleFoods.index(food)+1)*25+170))
 	pygame.draw.rect(screen,(255,255,255),rect)
 	if rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clickedOn:
 		newPrice = int((mousePos[0]-5)/3)
 
 		prices[food]=newPrice
-	sliderect=pygame.Rect((prices[food]*3)-10,((possibleFoods.index(food)+1)*75)-5,20,20)
+	sliderect=pygame.Rect((prices[food]*3)-10,((possibleFoods.index(food)+1)*25)+155,20,20)
 	pygame.draw.rect(screen,(0, 150, 50),sliderect)
 
 def moveCustomers():
-	print("attempting to move",)
+	#print("attempting to move",)
 	global money
 	global timeLastServed
 	for c in customers:
 		if c.state == CustomerState.onStreet:
-			c.y += 1
+			c.y += 5
 		elif c.state == CustomerState.goingToShop:
-			c.x += 1
+			c.x += 5
 		elif c.state==CustomerState.waiting:
-			print(time.time()-timeLastServed)
+			#print(time.time()-timeLastServed)
 			if time.time()-timeLastServed>=servingSpeed:
 				timeLastServed=time.time()
 				c.state=CustomerState.leavingShop
@@ -67,14 +92,15 @@ def moveCustomers():
 						money+=prices[c.desiredMeal]
 						stock[c.desiredMeal] -= 1
 		if c.state == CustomerState.leavingShop:
-			c.y += 1
-for i in customers:
-	print(i)
+			c.y += 5
+#or i in customers:
+	#print(i)
 customerSpawnTime=time.time()
 for i in range(0,5):
 	LOT.append(generateTrader(200,i*100, possibleFoods))
 selectedtrader=LOT[0]
 while not Done:
+	money-=0.1
 	screen.fill((0,0,0))
 	mousePos=pygame.mouse.get_pos()
 	clicked=False
@@ -87,9 +113,10 @@ while not Done:
 			clicked=True
 			mousePos=pygame.mouse.get_pos()
 	mouseRect=pygame.Rect(mousePos[0],mousePos[1],1,1)
-	if buyrect.contains(mouseRect) and clicked and money> trader.prices[trader.item]:
-		stock[trader.item] += 1
-		money-=trader.prices[trader.item]
+	if buyrect.contains(mouseRect) and clicked and money> selectedtrader.prices[selectedtrader.item]:
+		stock[selectedtrader.item] += 1
+		print("buy"+selectedtrader.item)
+		money-=selectedtrader.prices[selectedtrader.item]
 	for i in range(len(LOT)):
 		traderrect=pygame.Rect(LOT[i].x,LOT[i].y,100,50)
 		if traderrect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
@@ -113,9 +140,9 @@ while not Done:
 		if i.y==360 and i.desiredMeal in mealList and i.state == CustomerState.onStreet and i.budget>=prices[i.desiredMeal] and stock[i.desiredMeal]>0 and prices[i.desiredMeal]:
 			amountOverpriced = (prices[i.desiredMeal]-rationalPrices[i.desiredMeal])*2.5
 			if random.randrange(0,100)>amountOverpriced:
-				print("yay! a customer entered with the meal of: " + i.desiredMeal)
+				#print("yay! a customer entered with the meal of: " + i.desiredMeal)
 				i.state = CustomerState.goingToShop
-		if i.x==600 and i.state==CustomerState.goingToShop:
+		if i.x>=600 and i.state==CustomerState.goingToShop:
 			i.state = CustomerState.waiting
 
 		rect = pygame.Rect(i.x,i.y,10,10)

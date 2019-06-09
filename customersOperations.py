@@ -18,6 +18,6 @@ class Customer:
 
 def generateCustomer(possibleFoods):
 	customer = Customer(possibleFoods[random.randrange(0,len(possibleFoods))],random.randrange(2,50))
-	print(customer)
-	
+	#print(customer)
+
 	return customer
