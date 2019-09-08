@@ -6,6 +6,7 @@ class Trader:
 	item='Bread'
 	x=360
 	y=0
+	rect=0
 	prices =	{
 	 'Bread':5,
 	 'Potatoes':5,
@@ -18,10 +19,11 @@ class Trader:
 	 'Chicken': 5,
 	 'Roast Beef': 5,
 	}
-	def __init__(self, prices,x,y):
+	def __init__(self, prices,x,y, rect):
 		self.prices = prices
 		self.x = x
 		self.y = y
+		self.rect=rect
 
 	def handleKeypress(self, event):
 		global text
@@ -45,11 +47,11 @@ class Trader:
 
 text=''
 
-def generateTrader(x, y, possibleFoods):
+def generateTrader(x, y, possibleFoods, rect):
 	traderPrices = {}
 	for food in possibleFoods:
 		traderPrices[food] = random.randrange(10,50)
-	trader = Trader(traderPrices,x,y)
+	trader = Trader(traderPrices,x,y,rect)
 	return trader
 def trade(trader, screen):
 	windowrect=pygame.Rect(550,10,200,100)

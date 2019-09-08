@@ -27,10 +27,13 @@ treeImage=pygame.image.load("cityTiles_067.png")
 groundImage=pygame.image.load("cityTiles_066.png")
 grassImage=pygame.image.load("cityTiles_066.png")
 busImage=pygame.image.load("cityTiles_002.png")
+Image=pygame.image.load("cityTiles_073.png")
+ourImage=pygame.image.load("buildingTiles_100.png")
+carImage=pygame.image.load("carBlue2_003.png")
 pygame.font.init()
 myfont=pygame.font.SysFont('Times New Roman',24)
 
-imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage]
+imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage,Image,ourImage,carImage]
 stock =	{
   "Potatoes": 5,
   "Bread": 6,
@@ -81,11 +84,17 @@ def makeTileMap():
 			else:
 				list.append(random.randint(2,4))
 		tilemap.append(list)
-	tilemap[30][6]=5
-
-
-
+	for i in range(0,5*2, 2):
+		tilemap[12+i][6]=5
+		tilemap[12+i+1][6]=4
+		tilemap[12+i+1][5]=6
+	tilemap[20][4]=7
 makeTileMap()
+for i in range(0, 10, 2):
+	print(12+i)
+
+	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127)))
+
 print(tilemap)
 def drawSlider(food, mousePos, clickedOn):
 	rect=pygame.Rect(5,(possibleFoods.index(food)+1)*25+160,150,10)
@@ -111,7 +120,8 @@ def moveCustomers():
 	global timeLastServed
 	for c in customers:
 		if c.state == CustomerState.onStreet:
-			c.y += 5
+			c.y += 2.5
+			c.x += 5
 		elif c.state == CustomerState.goingToShop:
 			c.x += 5
 		elif c.state==CustomerState.waiting:
@@ -129,8 +139,7 @@ def moveCustomers():
 #or i in customers:
 	#print(i)
 customerSpawnTime=time.time()
-for i in range(0,5):
-	LOT.append(generateTrader(200,i*100, possibleFoods))
+
 selectedtrader=LOT[0]
 while not Done:
 	money-=(money/1000)
@@ -152,9 +161,10 @@ while not Done:
 		print("buy"+selectedtrader.item)
 		money-=selectedtrader.prices[selectedtrader.item]
 	for i in range(len(LOT)):
-		traderrect=pygame.Rect(LOT[i].x,LOT[i].y,100,50)
-		if traderrect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
+
+		if LOT[i].rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
 			selectedtrader=LOT[i]
+			print("oh no!!!:(")
 
 	trade(selectedtrader,screen)
 	for meal in mealList:
@@ -162,13 +172,10 @@ while not Done:
 	rect = pygame.Rect(320,0,120,600)
 	#pygame.draw.rect(screen, (200, 200, 200), rect)
 
-	# if time.time()-customerSpawnTime>=0.1:
-	# 	customers.append(generateCustomer(possibleFoods))
-	# 	customerSpawnTime=time.time()
+	if time.time()-customerSpawnTime>=random.randint(2,7):
+		customers.append(generateCustomer(possibleFoods))
+		customerSpawnTime=time.time()
 	moveCustomers()
-	for trader in LOT:
-		traderRect=pygame.Rect(trader.x,trader.y,100,50)
-		pygame.draw.rect(screen,(100,0,0),traderRect)
 	for i in customers:
 		if i.y==360 and i.desiredMeal in mealList and i.state == CustomerState.onStreet and i.budget>=prices[i.desiredMeal] and stock[i.desiredMeal]>0 and prices[i.desiredMeal]:
 			amountOverpriced = (prices[i.desiredMeal]-rationalPrices[i.desiredMeal])*2.5
@@ -176,10 +183,12 @@ while not Done:
 				#print("yay! a customer entered with the meal of: " + i.desiredMeal)
 				i.state = CustomerState.goingToShop
 		if i.x>=600 and i.state==CustomerState.goingToShop:
+			print("h")
 			i.state = CustomerState.waiting
+		screen.blit(carImage,(i.x,i.y))
 
-		rect = pygame.Rect(i.x,i.y,10,10)
-		pygame.draw.rect(screen, (0, 0,255 -  possibleFoods.index(i.desiredMeal)*(255/len(possibleFoods))), rect)
+		#rect = pygame.Rect(i.x,i.y,10,10)
+		#pygame.draw.rect(screen, (0, 0,255 -  possibleFoods.index(i.desiredMeal)*(255/len(possibleFoods))), rect)
 	# print("")
 	textsurface=myfont.render("Money: "+str(money),False,(255,255,255))
 	screen.blit(textsurface,(5,5))
