@@ -3,7 +3,7 @@ from enum import Enum
 CustomerState = Enum('CustomerState', 'onStreet goingToShop waiting leavingShop')
 class Customer:
 	x=-10
-	y=210
+	y=205
 	budget = 5
 	desiredMeal = ['Waffles']
 	state = CustomerState.onStreet

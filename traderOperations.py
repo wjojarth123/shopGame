@@ -17,7 +17,8 @@ class Trader:
 	 'Ice cream': 5,
 	 'Sushi': 5,
 	 'Chicken': 5,
-	 'Roast Beef': 5,
+	 'Roast beef': 5,
+	 'Ad':50
 	}
 	def __init__(self, prices,x,y, rect):
 		self.prices = prices
@@ -31,6 +32,8 @@ class Trader:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_RETURN:
 				print(text)
+				print(text.title() in self.prices)
+				print(self.prices)
 				if text.title() in self.prices:
 					priceOfitem=self.prices[text.title()]
 					self.item=text.title()
@@ -51,6 +54,7 @@ def generateTrader(x, y, possibleFoods, rect):
 	traderPrices = {}
 	for food in possibleFoods:
 		traderPrices[food] = random.randrange(10,50)
+	traderPrices['Ad'] = 50
 	trader = Trader(traderPrices,x,y,rect)
 	return trader
 def trade(trader, screen):

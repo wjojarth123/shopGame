@@ -5,7 +5,7 @@ from enum import Enum
 from customersOperations import Customer, generateCustomer,  CustomerState
 from traderOperations import *
 LOT=[]
-mapx=100
+mapx=15
 mapy=50
 startx=-1500
 starty=-100
@@ -20,7 +20,7 @@ Done=False
 readyToServe = False
 timeLastServed=time.time()
 servingSpeed=1
-money=100
+money=50000
 shopImage=pygame.image.load("buildingTiles_113.png")
 roadImage=pygame.image.load("roads.png")
 treeImage=pygame.image.load("cityTiles_067.png")
@@ -32,7 +32,7 @@ ourImage=pygame.image.load("buildingTiles_100.png")
 carImage=pygame.image.load("carBlue2_003.png")
 pygame.font.init()
 myfont=pygame.font.SysFont('Times New Roman',24)
-
+t=time.time()
 imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage,Image,ourImage,carImage]
 stock =	{
   "Potatoes": 5,
@@ -58,7 +58,7 @@ prices =	{
   'Chicken':0,
   'Roast Beef':0
 }
-
+amountOfads=0
 rationalPrices =	{
   "Potatoes": 5,
   "Bread": 5,
@@ -91,7 +91,6 @@ def makeTileMap():
 	tilemap[20][4]=7
 makeTileMap()
 for i in range(0, 10, 2):
-	print(12+i)
 
 	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127)))
 
@@ -107,12 +106,20 @@ def drawSlider(food, mousePos, clickedOn):
 		prices[food]=newPrice
 	sliderect=pygame.Rect((prices[food]*3)-10,((possibleFoods.index(food)+1)*25)+155,20,20)
 	pygame.draw.rect(screen,(0, 150, 50),sliderect)
-
-def drawmap():
-	print(len(tilemap))
-	print(len(tilemap[0]))
+'''
+=======================================
+=======================================
+draw map
+=======================================
+=======================================
+'''
+def drawmapI():
 	for i in range(mapy):
 		for o in range(mapx):
+			screen.blit(imageList[tilemap[i][o]],(o*132+i*66+startx,i*33+starty-imageList[tilemap[i][o]].get_rect().size[1]))
+def drawmap():
+	for i in range(mapy):
+		for o in range(0,12):
 			screen.blit(imageList[tilemap[i][o]],(o*132+i*66+startx,i*33+starty-imageList[tilemap[i][o]].get_rect().size[1]))
 def moveCustomers():
 	#print("attempting to move",)
@@ -124,6 +131,7 @@ def moveCustomers():
 			c.x += 5
 		elif c.state == CustomerState.goingToShop:
 			c.x += 5
+			c.y += 2.5
 		elif c.state==CustomerState.waiting:
 			#print(time.time()-timeLastServed)
 			if time.time()-timeLastServed>=servingSpeed:
@@ -131,22 +139,39 @@ def moveCustomers():
 				c.state=CustomerState.leavingShop
 				if stock[c.desiredMeal] >0 and c.budget>prices[c.desiredMeal] :
 					amountOverpriced = (prices[c.desiredMeal]-rationalPrices[c.desiredMeal])*2.5
-					if random.randrange(0,100)>amountOverpriced:
+					if random.randrange(0,100 + amountOfads)>amountOverpriced:
 						money+=prices[c.desiredMeal]
 						stock[c.desiredMeal] -= 1
 		if c.state == CustomerState.leavingShop:
-			c.y += 5
+			c.y += 2.5
+			c.x += 5
 #or i in customers:
 	#print(i)
 customerSpawnTime=time.time()
 
 selectedtrader=LOT[0]
+
+checkTiming = False
+
+'''
+=======================================
+=======================================
+while loop
+=======================================
+=======================================
+'''
+
+drawmapI()
 while not Done:
-	money-=(money/1000)
-	screen.fill((0,0,0))
-	drawmap()
+	money-=(time.time() - t)/4
+	t = time.time()
+	drawmapI()
 	mousePos=pygame.mouse.get_pos()
 	clicked=False
+	if checkTiming:
+		t2 = time.time()
+		print("map drawing took " + str(t2 - t) + 'seconds')
+
 	for event in pygame.event.get():
 		if event.type== pygame.KEYDOWN:
 			selectedtrader.handleKeypress(event)
@@ -155,24 +180,35 @@ while not Done:
 		if event.type==pygame.MOUSEBUTTONDOWN:
 			clicked=True
 			mousePos=pygame.mouse.get_pos()
+
+	if checkTiming:
+		t3 = time.time()
+		print("Event Handling took " + str(t3 - t2) + 'seconds')
+
 	mouseRect=pygame.Rect(mousePos[0],mousePos[1],1,1)
+
 	if buyrect.contains(mouseRect) and clicked and money> selectedtrader.prices[selectedtrader.item]:
-		stock[selectedtrader.item] += 1
-		print("buy"+selectedtrader.item)
-		money-=selectedtrader.prices[selectedtrader.item]
+		if not selectedtrader.item=='Ad':
+			stock[selectedtrader.item] += 1
+			print("buy"+selectedtrader.item)
+			money-=selectedtrader.prices[selectedtrader.item]
+		else:
+			amountOfads+=20
+			money-=selectedtrader.prices[selectedtrader.item]
 	for i in range(len(LOT)):
 
 		if LOT[i].rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
 			selectedtrader=LOT[i]
-			print("oh no!!!:(")
 
 	trade(selectedtrader,screen)
-	for meal in mealList:
-		drawSlider(meal,mousePos,clicked)
-	rect = pygame.Rect(320,0,120,600)
-	#pygame.draw.rect(screen, (200, 200, 200), rect)
+	if checkTiming:
+		t4=time.time()
+		print("trader Handling took " + str(t4 - t3) + 'seconds')
 
-	if time.time()-customerSpawnTime>=random.randint(2,7):
+
+
+
+	if time.time()-customerSpawnTime>=random.randint(1,3):
 		customers.append(generateCustomer(possibleFoods))
 		customerSpawnTime=time.time()
 	moveCustomers()
@@ -186,13 +222,29 @@ while not Done:
 			print("h")
 			i.state = CustomerState.waiting
 		screen.blit(carImage,(i.x,i.y))
-
+	if checkTiming:
+		t5=time.time()
+		print("trader Handling took " + str(t5 - t4) + 'seconds')
 		#rect = pygame.Rect(i.x,i.y,10,10)
 		#pygame.draw.rect(screen, (0, 0,255 -  possibleFoods.index(i.desiredMeal)*(255/len(possibleFoods))), rect)
 	# print("")
-	textsurface=myfont.render("Money: "+str(money),False,(255,255,255))
+	for meal in mealList:
+		drawSlider(meal,mousePos,clicked)
+	textsurface=myfont.render("Money: "+str(round(money, 2)),False,(255,255,255))
 	screen.blit(textsurface,(5,5))
 	for i in range(len(mealList)):
 		textsurface=myfont.render(mealList[i]+str(stock[mealList[i]]),False,(255,255,255))
 		screen.blit(textsurface,(5,(i+1)*15))
-		pygame.display.flip()
+	textsurface=myfont.render('Amount of ads:'+str(amountOfads),False,(255,255,255))
+	screen.blit(textsurface,(5,165))
+	pygame.display.flip()
+	if money<=0:
+		print("you  loser, you just lost again!!!!!")
+		Done=True
+	if checkTiming:
+		t6=time.time()
+		print("Meal Handling took " + str(t6 - t5) + 'seconds')
+
+
+
+		print("One loop took " + str( time.time() - t) + 'seconds')
