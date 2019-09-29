@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import client
 from enum import Enum
 from customersOperations import Customer, generateCustomer,  CustomerState
 from traderOperations import *
@@ -89,7 +90,8 @@ def makeTileMap():
 		tilemap[12+i+1][6]=4
 		tilemap[12+i+1][5]=6
 	tilemap[20][4]=7
-makeTileMap()
+# makeTileMap()
+tilemap = client.getTileMap()
 for i in range(0, 10, 2):
 
 	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127)))

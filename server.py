@@ -37,7 +37,7 @@ started socket
 '''
 s=socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-port=12345
+port=12344 
 s.bind(('',port))
 s.listen(5)
 
