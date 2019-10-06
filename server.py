@@ -2,10 +2,14 @@ import socket
 import random
 import atexit
 import threading
+import time
+from customersOperations import Customer, generateCustomer,  CustomerState
 playerlist=[]
 tilemap = []
 mapx=15
 mapy=50
+mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice Cream','Sushi','Chicken','Roast Beef']
+possibleFoods = mealList
 '''
 =======================================
 =======================================
@@ -37,18 +41,9 @@ started socket
 '''
 s=socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-port=12344 
+port=12344
 s.bind(('',port))
 s.listen(5)
-
-def end():
-	print("Closing Socket")
-	for player in playerlist:
-		player.send(bytes("closed","UTF-8"))
-	s.close()
-
-atexit.register(end)
-
 def sendToAll(message):
 	messageLength = str(len(message))
 	for i in range(4-len(messageLength)):
@@ -57,6 +52,14 @@ def sendToAll(message):
 	for player in playerlist:
 		player.send(bytes(messageLength,"UTF-8"))
 		player.send(bytes(str(message),"UTF-8"))
+def end():
+	print("Closing Socket")
+	sendToAll("close")
+	s.close()
+
+atexit.register(end)
+customerSpawnTime=time.time()
+
 def listen():
 	while True:
 		client, address = s.accept()
@@ -70,6 +73,7 @@ while len(playerlist) < 2:
 sendToAll(str(tilemap))
 
 while len(playerlist) >= 2:
-	message="foo"
-	sendToAll("hi")
+	if time.time()-customerSpawnTime>=random.randint(1,3):
+		sendToAll("customers"+str(generateCustomer(possibleFoods)))
+		customerSpawnTime=time.time()
 print('ready')

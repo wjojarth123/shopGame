@@ -76,6 +76,7 @@ rationalPrices =	{
 
 
 customers = []
+
 def makeTileMap():
 	for i in range(mapy):
 		list=[]
@@ -149,7 +150,7 @@ def moveCustomers():
 			c.x += 5
 #or i in customers:
 	#print(i)
-customerSpawnTime=time.time()
+# customerSpawnTime=time.time()
 
 selectedtrader=LOT[0]
 
@@ -165,6 +166,7 @@ while loop
 
 drawmapI()
 while not Done:
+	print(customers)
 	money-=(time.time() - t)/4
 	t = time.time()
 	drawmapI()
@@ -210,9 +212,11 @@ while not Done:
 
 
 
-	if time.time()-customerSpawnTime>=random.randint(1,3):
+	'''if time.time()-customerSpawnTime>=random.randint(1,3):
 		customers.append(generateCustomer(possibleFoods))
-		customerSpawnTime=time.time()
+		customerSpawnTime=time.time()'''
+	customers += client.newCustomers
+	client.newCustomers=[]
 	moveCustomers()
 	for i in customers:
 		if i.y==360 and i.desiredMeal in mealList and i.state == CustomerState.onStreet and i.budget>=prices[i.desiredMeal] and stock[i.desiredMeal]>0 and prices[i.desiredMeal]:
