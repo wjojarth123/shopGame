@@ -29,8 +29,12 @@ def listen():
         print(m)
 t1=threading.Thread(target=listen)
 t1.start()
+
+
 def getTileMap():
     return tilemap
 
 def getNewCustomers():
     return newCustomers
+def sendPrices(prices):
+    s.send(prices)

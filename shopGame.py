@@ -105,8 +105,8 @@ def drawSlider(food, mousePos, clickedOn):
 	pygame.draw.rect(screen,(255,255,255),rect)
 	if rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clickedOn:
 		newPrice = int((mousePos[0]-5)/3)
-
 		prices[food]=newPrice
+		client.sendPrices(prices)
 	sliderect=pygame.Rect((prices[food]*3)-10,((possibleFoods.index(food)+1)*25)+155,20,20)
 	pygame.draw.rect(screen,(0, 150, 50),sliderect)
 '''

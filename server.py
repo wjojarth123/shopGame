@@ -30,7 +30,7 @@ def makeTileMap():
 		tilemap[12+i][6]=5
 		tilemap[12+i+1][6]=4
 		tilemap[12+i+1][5]=6
-	tilemap[20][4]=7
+		tilemap[12+i+1][4]=7
 makeTileMap()
 '''
 =======================================
@@ -63,6 +63,7 @@ customerSpawnTime=time.time()
 def listen():
 	while True:
 		client, address = s.accept()
+		
 		playerlist.append(client)
 t1=threading.Thread(target=listen)
 t1.start()
