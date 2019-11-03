@@ -8,6 +8,7 @@ playerlist=[]
 tilemap = []
 mapx=15
 mapy=50
+prices=[0,0,0,0,0]
 mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice Cream','Sushi','Chicken','Roast Beef']
 possibleFoods = mealList
 '''
@@ -32,6 +33,7 @@ def makeTileMap():
 		tilemap[12+i+1][5]=6
 		tilemap[12+i+1][4]=7
 makeTileMap()
+print(len(tilemap))
 '''
 =======================================
 =======================================
@@ -52,21 +54,54 @@ def sendToAll(message):
 	for player in playerlist:
 		player.send(bytes(messageLength,"UTF-8"))
 		player.send(bytes(str(message),"UTF-8"))
+def send(player,message):
+	message=str(message)
+	messageLength = str(len(message))
+	for i in range(4-len(messageLength)):
+		messageLength="0"+messageLength
+
+	print(messageLength)
+	print(len(message))
+	player.send(bytes(messageLength,"UTF-8"))
+	player.send(bytes(str(message),"UTF-8"))
 def end():
 	print("Closing Socket")
 	sendToAll("close")
 	s.close()
-
+def read(player):
+	l=int(player.recv(4))
+	print('length:', l)
+	m=player.recv(l)
+	m=m.decode("utf-8")
+	return m
 atexit.register(end)
 customerSpawnTime=time.time()
 
 def listen():
 	while True:
 		client, address = s.accept()
-		
+		send(client,tilemap)
+		send(client,"playerID"+str(len(playerlist)))
+		print("playerID"+str(len(playerlist)))
 		playerlist.append(client)
+		print('get out of here, new guy')
+def listenForPrices():
+	while True:
+		print("running")
+		for i in playerlist:
+			print("running2")
+			msg=read(i)
+			print(msg)
+			msg=msg.split(";")
+			if msg[0]=="prices":
+				prices[int(msg[1])]=eval(msg[2])
+
+
 t1=threading.Thread(target=listen)
 t1.start()
+t2=threading.Thread(target=listenForPrices)
+t2.start()
+
 
 while len(playerlist) < 2:
 	pass
@@ -74,6 +109,7 @@ while len(playerlist) < 2:
 sendToAll(str(tilemap))
 
 while len(playerlist) >= 2:
+	# print(prices)
 	if time.time()-customerSpawnTime>=random.randint(1,3):
 		sendToAll("customers"+str(generateCustomer(possibleFoods)))
 		customerSpawnTime=time.time()

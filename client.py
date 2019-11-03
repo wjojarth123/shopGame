@@ -1,6 +1,7 @@
 import socket
 import atexit
 import threading
+import time
 from customersOperations import Customer,fromString
 def end():
     s.close()
@@ -9,7 +10,7 @@ IP="127.0.0.1"
 s=socket.socket()
 port=12344
 s.connect((IP,port))
-
+AyeDee=0
 tilemap = []
 
 newCustomers = []
@@ -19,16 +20,36 @@ def read():
     m=m.decode("utf-8")
     return m
 tilemap=eval(read())
+def send(message):
+	message=str(message)
+	messageLength = str(len(message))
+	for i in range(4-len(messageLength)):
+		messageLength="0"+messageLength
+
+	print(messageLength)
+	print(len(message))
+	s.send(bytes(messageLength,"UTF-8") + bytes(str(message),"UTF-8"))
 def listen():
+    global AyeDee
     while True:
         m=read()
         if m.startswith("customers"):
             m = m[9:]
             print(m)
             newCustomers.append(fromString(m))
+        elif m.startswith("playerID"):
+            m = int(m[8:])
+            print("recieved id: ", m)
+            AyeDee=m
         print(m)
+def sendx():
+    while True:
+        time.sleep(1)
+        send("foo")
 t1=threading.Thread(target=listen)
 t1.start()
+t2=threading.Thread(target=sendx)
+t2.start()
 
 
 def getTileMap():
@@ -37,4 +58,4 @@ def getTileMap():
 def getNewCustomers():
     return newCustomers
 def sendPrices(prices):
-    s.send(prices)
+    send("prices;"+str(AyeDee)+";"+str(prices))

@@ -23,6 +23,7 @@ timeLastServed=time.time()
 servingSpeed=1
 money=50000
 shopImage=pygame.image.load("buildingTiles_113.png")
+bunnyImage=pygame.image.load("buildingTiles_041.png")
 roadImage=pygame.image.load("roads.png")
 treeImage=pygame.image.load("cityTiles_067.png")
 groundImage=pygame.image.load("cityTiles_066.png")
@@ -34,7 +35,7 @@ carImage=pygame.image.load("carBlue2_003.png")
 pygame.font.init()
 myfont=pygame.font.SysFont('Times New Roman',24)
 t=time.time()
-imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage,Image,ourImage,carImage]
+imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage,Image,ourImage,carImage,bunnyImage]
 stock =	{
   "Potatoes": 5,
   "Bread": 6,
@@ -77,22 +78,11 @@ rationalPrices =	{
 
 customers = []
 
-def makeTileMap():
-	for i in range(mapy):
-		list=[]
-		for o in range(mapx):
-			if o==5:
-				list.append(random.randint(0,1))
-			else:
-				list.append(random.randint(2,4))
-		tilemap.append(list)
-	for i in range(0,5*2, 2):
-		tilemap[12+i][6]=5
-		tilemap[12+i+1][6]=4
-		tilemap[12+i+1][5]=6
-	tilemap[20][4]=7
+
 # makeTileMap()
 tilemap = client.getTileMap()
+tilemap[15+client.AyeDee*2][4]=9
+print("iddd", client.AyeDee)
 for i in range(0, 10, 2):
 
 	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127)))
@@ -107,6 +97,7 @@ def drawSlider(food, mousePos, clickedOn):
 		newPrice = int((mousePos[0]-5)/3)
 		prices[food]=newPrice
 		client.sendPrices(prices)
+		print("11111")
 	sliderect=pygame.Rect((prices[food]*3)-10,((possibleFoods.index(food)+1)*25)+155,20,20)
 	pygame.draw.rect(screen,(0, 150, 50),sliderect)
 '''
@@ -166,7 +157,6 @@ while loop
 
 drawmapI()
 while not Done:
-	print(customers)
 	money-=(time.time() - t)/4
 	t = time.time()
 	drawmapI()
