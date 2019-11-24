@@ -79,6 +79,7 @@ customerSpawnTime=time.time()
 
 def listen():
 	while True:
+		print('listening')
 		client, address = s.accept()
 		send(client,tilemap)
 		send(client,"playerID"+str(len(playerlist)))
@@ -87,14 +88,16 @@ def listen():
 		print('get out of here, new guy')
 def listenForPrices():
 	while True:
-		print("running")
+		# print(len(playerlist))
 		for i in playerlist:
 			print("running2")
 			msg=read(i)
 			print(msg)
 			msg=msg.split(";")
 			if msg[0]=="prices":
-				prices[int(msg[1])]=eval(msg[2])
+				prices[int(msg[1])]= eval(msg[2])
+				print(prices)
+				sendToAll("np;"+msg[1]+";"+msg[2])
 
 
 t1=threading.Thread(target=listen)
@@ -109,7 +112,7 @@ while len(playerlist) < 2:
 sendToAll(str(tilemap))
 
 while len(playerlist) >= 2:
-	# print(prices)
+	# print(prices)l
 	if time.time()-customerSpawnTime>=random.randint(1,3):
 		sendToAll("customers"+str(generateCustomer(possibleFoods)))
 		customerSpawnTime=time.time()

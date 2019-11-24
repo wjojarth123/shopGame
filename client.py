@@ -12,7 +12,7 @@ port=12344
 s.connect((IP,port))
 AyeDee=0
 tilemap = []
-
+allPlayersPrices=[0,0,0,0,0]
 newCustomers = []
 def read():
     l=int(s.recv(4))
@@ -41,6 +41,9 @@ def listen():
             m = int(m[8:])
             print("recieved id: ", m)
             AyeDee=m
+        elif m.startswith("np"):
+            m=m.split(";")
+            allPlayersPrices[m[1]]=m[2]
         print(m)
 def sendx():
     while True:

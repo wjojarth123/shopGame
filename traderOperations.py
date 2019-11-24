@@ -47,7 +47,6 @@ class Trader:
 			else:
 				text += event.unicode
 
-
 text=''
 
 def generateTrader(x, y, possibleFoods, rect):
