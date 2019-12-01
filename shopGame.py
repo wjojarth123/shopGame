@@ -13,7 +13,6 @@ starty=-100
 tilemap=[]
 selectedtrader=0
 pygame.init()
-buyrect=pygame.Rect(650,60,80,30)
 screen = pygame.display.set_mode((800, 600))
 mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice Cream','Sushi','Chicken','Roast Beef']
 possibleFoods = mealList
@@ -21,7 +20,7 @@ Done=False
 readyToServe = False
 timeLastServed=time.time()
 servingSpeed=1
-money=50000
+money=100
 shopImage=pygame.image.load("buildingTiles_113.png")
 bunnyImage=pygame.image.load("buildingTiles_041.png")
 roadImage=pygame.image.load("roads.png")
@@ -180,15 +179,16 @@ while not Done:
 		print("Event Handling took " + str(t3 - t2) + 'seconds')
 
 	mouseRect=pygame.Rect(mousePos[0],mousePos[1],1,1)
-
-	if buyrect.contains(mouseRect) and clicked and money> selectedtrader.prices[selectedtrader.item]:
-		if not selectedtrader.item=='Ad':
-			stock[selectedtrader.item] += 1
-			print("buy"+selectedtrader.item)
-			money-=selectedtrader.prices[selectedtrader.item]
-		else:
-			amountOfads+=20
-			money-=selectedtrader.prices[selectedtrader.item]
+	for i in range(len(possibleFoods)):
+		buyrect = pygame.Rect(700,i*35,50,50)
+		if mouseRect.colliderect(buyrect) and clicked and money> selectedtrader.prices[possibleFoods[i]]:
+			if not selectedtrader.item=='Ad':
+				stock[possibleFoods[i]] += 1
+				print("buy"+selectedtrader.item)
+				money-=selectedtrader.prices[possibleFoods[i]]
+			else:
+				amountOfads+=20
+				money-=selectedtrader.prices[selectedtrader.item]
 	for i in range(len(LOT)):
 
 		if LOT[i].rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:

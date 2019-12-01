@@ -1,5 +1,9 @@
 import random
 import pygame
+breadImage=pygame.image.load("bread.png")
+potatoImage=pygame.image.load("potato.png")
+wafflesImage=pygame.image.load("waffles.png")
+buyImage=pygame.image.load("buy.png")
 pygame.font.init()
 myfont=pygame.font.SysFont('Times New Roman',24)
 class Trader:
@@ -48,7 +52,12 @@ class Trader:
 				text += event.unicode
 
 text=''
+def makeitem(image,y,trader,item,screen):
 
+	screen.blit(image,(610,y))
+	screen.blit(buyImage,(700,y-10))
+	textsurface=myfont.render(str(trader.prices[item]),False,(0,0,0))
+	screen.blit(textsurface,(650,y))
 def generateTrader(x, y, possibleFoods, rect):
 	traderPrices = {}
 	for food in possibleFoods:
@@ -57,14 +66,10 @@ def generateTrader(x, y, possibleFoods, rect):
 	trader = Trader(traderPrices,x,y,rect)
 	return trader
 def trade(trader, screen):
-	windowrect=pygame.Rect(550,10,200,100)
+	windowrect=pygame.Rect(600,0,200,430)
 	pygame.draw.rect(screen,(255,255,255),windowrect)
-	buyrect=pygame.Rect(650,60,80,30)
-	pygame.draw.rect(screen,(0,255,100),buyrect)
-	textsurface=myfont.render("product: "+text,False,(180,0,180))
-	screen.blit(textsurface,(560,20))
-	textsurface=myfont.render("price: "+str(priceOfitem),False,(180,0,180))
-	screen.blit(textsurface,(560,60))
-
+	makeitem(breadImage,10,trader,"Bread",screen)
+	makeitem(potatoImage,45,trader,"Potatoes",screen)
+	makeitem(wafflesImage,80,trader,"Waffles",screen)
 
 priceOfitem=0
