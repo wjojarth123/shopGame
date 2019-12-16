@@ -58,10 +58,14 @@ def makeitem(image,y,trader,item,screen):
 	screen.blit(buyImage,(700,y-10))
 	textsurface=myfont.render(str(trader.prices[item]),False,(0,0,0))
 	screen.blit(textsurface,(650,y))
-def generateTrader(x, y, possibleFoods, rect):
+def generateTrader(x, y, possibleFoods, rect,run,p=None):
 	traderPrices = {}
-	for food in possibleFoods:
-		traderPrices[food] = random.randrange(10,50)
+	if run or p==0:
+		for food in possibleFoods:
+			traderPrices[food] = random.randrange(5,30)
+	else:
+		traderPrices = p
+	
 	traderPrices['Ad'] = 50
 	trader = Trader(traderPrices,x,y,rect)
 	return trader

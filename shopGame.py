@@ -82,9 +82,17 @@ customers = []
 tilemap = client.getTileMap()
 tilemap[15+client.AyeDee*2][4]=9
 print("iddd", client.AyeDee)
+for i in range(0,10,2):
+	shopPrice=client.allPlayersPrices[int(i/2)]
+	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(4*132+(12+i+1)*66+startx,(12+i+1)*33+starty-imageList[tilemap[12+i+1][4]].get_rect().size[1],132,127),False,shopPrice))
+	print(shopPrice)
+	print("jj")
+	print(4*132+(12+i+1)*66+startx,(12+i+1)*33+starty-imageList[tilemap[12+i+1][4]].get_rect().size[1])
+
+#tilemap[12+i+1][4]
 for i in range(0, 10, 2):
 
-	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127)))
+	LOT.append(generateTrader(200,i*100, possibleFoods,pygame.Rect(6*132+(12+i)*66+startx,(12+i)*33+starty-imageList[tilemap[12+i][6]].get_rect().size[1],132,127),True))
 
 print(tilemap)
 def drawSlider(food, mousePos, clickedOn):
@@ -110,10 +118,7 @@ def drawmapI():
 	for i in range(mapy):
 		for o in range(mapx):
 			screen.blit(imageList[tilemap[i][o]],(o*132+i*66+startx,i*33+starty-imageList[tilemap[i][o]].get_rect().size[1]))
-def drawmap():
-	for i in range(mapy):
-		for o in range(0,12):
-			screen.blit(imageList[tilemap[i][o]],(o*132+i*66+startx,i*33+starty-imageList[tilemap[i][o]].get_rect().size[1]))
+
 def moveCustomers():
 	#print("attempting to move",)
 	global money
@@ -156,6 +161,11 @@ while loop
 
 drawmapI()
 while not Done:
+	if client.updatedPrices:
+		for i in range(0,5):
+			LOT[i].prices=client.allPlayersPrices[i]
+		print("changing pry seas")
+		client.updatedPrices=False
 	money-=(time.time() - t)/4
 	t = time.time()
 	drawmapI()
