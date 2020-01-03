@@ -92,7 +92,7 @@ def listen():
 		elif m.startswith("np"):
 			print("switch prices")
 			m=m.split(";")
-			allPlayersPrices[int(m[1])]=eval(m[2])
+			allPlayersPrices[int(m[1])+1]=eval(m[2])
 			updatedPrices=True
 		print(m)
 def sendx():

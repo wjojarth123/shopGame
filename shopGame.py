@@ -164,6 +164,7 @@ while not Done:
 	if client.updatedPrices:
 		for i in range(0,5):
 			LOT[i].prices=client.allPlayersPrices[i]
+			print(client.allPlayersPrices[i])
 		print("changing pry seas")
 		client.updatedPrices=False
 	money-=(time.time() - t)/4
@@ -234,6 +235,7 @@ while not Done:
 		#rect = pygame.Rect(i.x,i.y,10,10)
 		#pygame.draw.rect(screen, (0, 0,255 -  possibleFoods.index(i.desiredMeal)*(255/len(possibleFoods))), rect)
 	# print("")
+	print(selectedtrader.prices)
 	for meal in mealList:
 		drawSlider(meal,mousePos,clicked)
 	textsurface=myfont.render("Money: "+str(round(money, 2)),False,(255,255,255))
