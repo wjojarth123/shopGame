@@ -47,13 +47,8 @@ port=12344
 s.bind(('',port))
 s.listen(5)
 def sendToAll(message):
-	messageLength = str(len(message))
-	for i in range(4-len(messageLength)):
-		messageLength="0"+messageLength
-
 	for player in playerlist:
-		player.send(bytes(messageLength,"UTF-8"))
-		player.send(bytes(str(message),"UTF-8"))
+		send(player,message)
 def send(player,message):
 	message=str(message)
 	messageLength = str(len(message))
@@ -70,9 +65,12 @@ def end():
 	s.close()
 def read(player):
 	l=int(player.recv(4))
-	print('length:', l)
 	m=player.recv(l)
 	m=m.decode("utf-8")
+	while not len(m) == l :
+		v=player.recv(l-len(m))
+		v=v.decode("utf-8")
+		m+=v
 	return m
 atexit.register(end)
 customerSpawnTime=time.time()
@@ -88,7 +86,7 @@ def listen():
 		print('get out of here, new guy')
 def listenForPrices():
 	while True:
-		# print(len(playerlist))
+		print(len(playerlist))
 		for i in playerlist:
 			print("running2")
 			msg=read(i)

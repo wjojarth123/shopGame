@@ -4,9 +4,9 @@ import sys
 import os
 
 if getattr(sys, 'frozen', False):
-    Path = sys._MEIPASS  # This is for when the program is frozen
+	Path = sys._MEIPASS  # This is for when the program is frozen
 else:
-    Path = os.path.dirname(__file__)  # This is when the program normally runs
+	Path = os.path.dirname(__file__)  # This is when the program normally runs
 
 shopImage = pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 
@@ -105,7 +105,8 @@ def trade(trader, screen):
 	makeitem(iceCreamImage,10 + offset*7,trader,"Ice Cream",screen)
 	makeitem(chickenImage,10 + offset*8,trader,"Chicken",screen)
 	makeitem(soupImage,10 + offset*9,trader,"Soup",screen)
-	makeitem(adImage,10 + offset*10,trader,"Ad",screen)
+	if "Ad" in trader.prices:
+		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
 
 priceOfitem=0
 import random
@@ -139,6 +140,11 @@ def generateCustomer(possibleFoods):
 	#print(customer)
 
 	return customer
+"""=================================
+====================================
+===============client===============
+====================================
+===================================="""
 import socket
 import atexit
 import threading
@@ -147,7 +153,7 @@ def end():
 	s.close()
 atexit.register(end)
 #IP="127.0.0.1"
-IP="192.168.0.14"
+IP="192.168.0.23"
 s=socket.socket()
 port=12344
 s.connect((IP,port))
@@ -205,6 +211,11 @@ def read():
 	l=int(s.recv(4))
 	m=s.recv(l)
 	m=m.decode("utf-8")
+	while not len(m) == l :
+		v=s.recv(l-len(m))
+		v=v.decode("utf-8")
+		m+=v
+
 	return m
 tilemap=eval(read())
 def getTileMap():
