@@ -51,26 +51,7 @@ class Trader:
 		self.y = y
 		self.rect=rect
 
-	def handleKeypress(self, event):
-		global text
-		global priceOfitem
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_RETURN:
-				print(text)
-				print(text.title() in self.prices)
-				print(self.prices)
-				if text.title() in self.prices:
-					priceOfitem=self.prices[text.title()]
-					self.item=text.title()
-					print('Just set trader item to: ' + self.item)
-					print(text)
 
-				text=''
-
-			elif event.key == pygame.K_BACKSPACE:
-				text = text[:-1]
-			else:
-				text += event.unicode
 
 text=''
 def makeitem(image,y,trader,item,screen):
@@ -95,16 +76,20 @@ def trade(trader, screen):
 	windowrect=pygame.Rect(600,0,200,430)
 	pygame.draw.rect(screen,(255,255,255),windowrect)
 	offset = 37
+
 	makeitem(breadImage,10,trader,"Bread",screen)
 	makeitem(potatoImage,10 + offset*1,trader,"Potatoes",screen)
 	makeitem(wafflesImage,10 + offset*2,trader,"Waffles",screen)
-	makeitem(pizzaImage,10 + offset*3,trader,"Pizza",screen)
-	makeitem(spaghettiImage,10 + offset*4,trader,"Spaghetti",screen)
-	makeitem(sushiImage,10 + offset*5,trader,"Sushi",screen)
-	makeitem(roastImage,10 + offset*6,trader,"Roast Beef",screen)
-	makeitem(iceCreamImage,10 + offset*7,trader,"Ice Cream",screen)
+	makeitem(spaghettiImage,10 + offset*3,trader,"Spaghetti",screen)
+	makeitem(soupImage,10 + offset*4,trader,"Soup",screen)
+	makeitem(pizzaImage,10 + offset*5,trader,"Pizza",screen)
+	makeitem(iceCreamImage,10 + offset*6,trader,"Ice Cream",screen)
+	makeitem(sushiImage,10 + offset*7,trader,"Sushi",screen)
 	makeitem(chickenImage,10 + offset*8,trader,"Chicken",screen)
-	makeitem(soupImage,10 + offset*9,trader,"Soup",screen)
+	makeitem(roastImage,10 + offset*9,trader,"Roast Beef",screen)
+
+
+
 	if "Ad" in trader.prices:
 		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
 
@@ -444,8 +429,6 @@ while not Done:
 		print("map drawing took " + str(t2 - t) + 'seconds')
 
 	for event in pygame.event.get():
-		if event.type== pygame.KEYDOWN:
-			selectedtrader.handleKeypress(event)
 		if event.type == pygame.QUIT:
 			done = True
 		if event.type==pygame.MOUSEBUTTONDOWN:
@@ -458,7 +441,7 @@ while not Done:
 
 	mouseRect=pygame.Rect(mousePos[0],mousePos[1],1,1)
 	for i in range(len(possibleFoods)):
-		buyrect = pygame.Rect(700,i*35,50,50)
+		buyrect = pygame.Rect(700,i*37,50,50)
 		if mouseRect.colliderect(buyrect) and clicked and money> selectedtrader.prices[possibleFoods[i]]:
 			if not selectedtrader.item=='Ad':
 				stock[possibleFoods[i]] += 1
