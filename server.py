@@ -51,7 +51,7 @@ def sendToAll(message):
 		try:
 			send(player,message)
 		except:
-			pass
+			playerlist[player]=0
 def send(player,message):
 	message=str(message)
 	messageLength = str(len(message))
@@ -83,6 +83,9 @@ def listen():
 		print('listening')
 		client, address = s.accept()
 		send(client,tilemap)
+		for i in range(len(playerlist))
+			if i==0:
+				send(client,"playerID"+str(i))
 		send(client,"playerID"+str(len(playerlist)))
 		print("playerID"+str(len(playerlist)))
 		playerlist.append(client)
