@@ -49,7 +49,10 @@ s.listen(5)
 def sendToAll(message):
 	for player in playerlist:
 		try:
-			send(player,message)
+			if playerlist[player] == 0:
+				pass
+			else:
+				send(player,message)
 		except:
 			playerlist[player]=0
 def send(player,message):
