@@ -72,11 +72,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='uc',
+          name='NewshopGame',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )
