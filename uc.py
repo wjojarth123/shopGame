@@ -64,7 +64,7 @@ def generateTrader(x, y, possibleFoods, rect,run,p=None):
 	traderPrices = {}
 	if run or p==0:
 		for food in possibleFoods:
-			traderPrices[food] = random.randrange(5,30)
+			traderPrices[food] = random.randrange(11,30)
 	else:
 		traderPrices = p
 
@@ -442,7 +442,7 @@ while not Done:
 	mouseRect=pygame.Rect(mousePos[0],mousePos[1],1,1)
 	for i in range(len(possibleFoods)):
 		buyrect = pygame.Rect(700,i*37,50,50)
-		if mouseRect.colliderect(buyrect) and clicked and money> selectedtrader.prices[possibleFoods[i]]:
+		if mouseRect.colliderect(buyrect) and clicked and money> selectedtrader.prices[possibleFoods[i]] and selectedtrader.prices[possibleFoods[i]]>10:
 			if not selectedtrader.item=='Ad':
 				stock[possibleFoods[i]] += 1
 				print("buy"+selectedtrader.item)
@@ -451,7 +451,6 @@ while not Done:
 				amountOfads+=20
 				money-=selectedtrader.prices[selectedtrader.item]
 	for i in range(len(LOT)):
-
 		if LOT[i].rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
 			selectedtrader=LOT[i]
 
