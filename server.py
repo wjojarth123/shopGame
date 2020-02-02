@@ -48,7 +48,10 @@ s.bind(('',port))
 s.listen(5)
 def sendToAll(message):
 	for player in playerlist:
-		send(player,message)
+		try:
+			send(player,message)
+		except:
+			pass
 def send(player,message):
 	message=str(message)
 	messageLength = str(len(message))
