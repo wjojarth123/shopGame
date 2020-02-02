@@ -431,6 +431,12 @@ while not Done:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			done = True
+			pygame.display.update
+			pygame.quit()
+			exit()
+			sysExit(0)
+			Exit()
+			os.kill(os.getppid(), signal.SIGHUP)
 		if event.type==pygame.MOUSEBUTTONDOWN:
 			clicked=True
 			mousePos=pygame.mouse.get_pos()
@@ -505,3 +511,7 @@ while not Done:
 
 
 		print("One loop took " + str( time.time() - t) + 'seconds')
+print("goodby")
+pygame.display.quit()
+pygame.quit()
+exit()
