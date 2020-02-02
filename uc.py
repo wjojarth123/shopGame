@@ -138,7 +138,7 @@ def end():
 	s.close()
 atexit.register(end)
 #IP="127.0.0.1"
-IP="192.168.0.23"
+IP="73.241.173.145"
 s=socket.socket()
 port=12344
 s.connect((IP,port))
