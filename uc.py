@@ -436,7 +436,6 @@ while not Done:
 			exit()
 			sysExit(0)
 			Exit()
-			os.kill(os.getppid(), signal.SIGHUP)
 		if event.type==pygame.MOUSEBUTTONDOWN:
 			clicked=True
 			mousePos=pygame.mouse.get_pos()
