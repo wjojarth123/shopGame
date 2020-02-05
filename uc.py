@@ -2,15 +2,25 @@ import random
 import pygame
 import sys
 import os
+print("imports complete")
+screen = pygame.display.set_mode((800, 600))
+windowrect=pygame.Rect(600,0,200,430)
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("screeen made")
+
 
 if getattr(sys, 'frozen', False):
 	Path = sys._MEIPASS  # This is for when the program is frozen
 else:
 	Path = os.path.dirname(__file__)  # This is when the program normally runs
-
+loading25=pygame.image.load(os.path.join(Path, "loading25%.png"))
+loading50=pygame.image.load(os.path.join(Path, "loading50%.png"))
+loading75=pygame.image.load(os.path.join(Path, "loading75%.png"))
+loading100=pygame.image.load(os.path.join(Path, "loading100%.png"))
 shopImage = pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
-
-
+print("25")
+screen.blit(loading25,(295,295))
+pygame.display.flip()
 breadImage=pygame.image.load(os.path.join(Path, "bread.png"))
 potatoImage=pygame.image.load(os.path.join(Path, "potato.png"))
 wafflesImage=pygame.image.load(os.path.join(Path, "waffles.png"))
@@ -87,12 +97,12 @@ def trade(trader, screen):
 	makeitem(sushiImage,10 + offset*7,trader,"Sushi",screen)
 	makeitem(chickenImage,10 + offset*8,trader,"Chicken",screen)
 	makeitem(roastImage,10 + offset*9,trader,"Roast Beef",screen)
-
-
-
 	if "Ad" in trader.prices:
 		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
-
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("50")
+screen.blit(loading50,(295,295))
+pygame.display.flip()
 priceOfitem=0
 import random
 from enum import Enum
@@ -130,6 +140,10 @@ def generateCustomer(possibleFoods):
 ===============client===============
 ====================================
 ===================================="""
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("75")
+screen.blit(loading75,(295,295))
+pygame.display.flip()
 import socket
 import atexit
 import threading
@@ -250,7 +264,6 @@ t2=threading.Thread(target=sendx)
 t2.start()
 
 
-import pygame
 import random
 import sys
 import os
@@ -263,7 +276,7 @@ starty=-100
 # tilemap=[]
 selectedtrader=0
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
+
 mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice Cream','Sushi','Chicken','Roast Beef']
 possibleFoods = mealList
 Done=False
@@ -271,6 +284,10 @@ readyToServe = False
 timeLastServed=time.time()
 servingSpeed=1
 money=100
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("100")
+screen.blit(loading100,(295,295))
+pygame.display.flip()
 shopImage=pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 bunnyImage=pygame.image.load(os.path.join(Path, "buildingTiles_041.png"))
 roadImage=pygame.image.load(os.path.join(Path, "roads.png"))
