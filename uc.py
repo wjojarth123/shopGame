@@ -4,7 +4,7 @@ import sys
 import os
 print("imports complete")
 screen = pygame.display.set_mode((800, 600))
-windowrect=pygame.Rect(600,0,200,430)
+windowrect=pygame.Rect(0,0,800,600)
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("screeen made")
 
@@ -99,10 +99,7 @@ def trade(trader, screen):
 	makeitem(roastImage,10 + offset*9,trader,"Roast Beef",screen)
 	if "Ad" in trader.prices:
 		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
-pygame.draw.rect(screen,(255,255,255),windowrect)
-print("50")
-screen.blit(loading50,(295,295))
-pygame.display.flip()
+
 priceOfitem=0
 import random
 from enum import Enum
@@ -140,9 +137,7 @@ def generateCustomer(possibleFoods):
 ===============client===============
 ====================================
 ===================================="""
-pygame.draw.rect(screen,(255,255,255),windowrect)
-print("75")
-screen.blit(loading75,(295,295))
+
 pygame.display.flip()
 import socket
 import atexit
@@ -155,6 +150,10 @@ atexit.register(end)
 IP="73.241.173.145"
 s=socket.socket()
 port=12344
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("50")
+screen.blit(loading50,(295,295))
+pygame.display.flip()
 s.connect((IP,port))
 AyeDee=0
 tilemap = []
@@ -262,7 +261,9 @@ t1=threading.Thread(target=listen)
 t1.start()
 t2=threading.Thread(target=sendx)
 t2.start()
-
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("75")
+screen.blit(loading75,(295,295))
 
 import random
 import sys
