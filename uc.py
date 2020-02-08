@@ -2,6 +2,8 @@ import random
 import pygame
 import sys
 import os
+import eztext
+import time
 print("imports complete")
 screen = pygame.display.set_mode((800, 600))
 windowrect=pygame.Rect(0,0,800,600)
@@ -288,7 +290,11 @@ money=100
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("100")
 screen.blit(loading100,(295,295))
+
 pygame.display.flip()
+time.sleep(2)
+txtbx = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
+
 shopImage=pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 bunnyImage=pygame.image.load(os.path.join(Path, "buildingTiles_041.png"))
 roadImage=pygame.image.load(os.path.join(Path, "roads.png"))
