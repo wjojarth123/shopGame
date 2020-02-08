@@ -110,10 +110,6 @@ t1.start()
 t2=threading.Thread(target=listenForPrices)
 t2.start()
 
-
-while len(playerlist) < 2:
-	pass
-
 sendToAll(str(tilemap))
 
 while len(playerlist) >= 2:
