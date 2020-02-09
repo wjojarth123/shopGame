@@ -4,6 +4,10 @@ import sys
 import os
 import eztext
 import time
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from string import Template
 print("imports complete")
 screen = pygame.display.set_mode((800, 600))
 windowrect=pygame.Rect(0,0,800,600)
@@ -141,6 +145,71 @@ def generateCustomer(possibleFoods):
 ===================================="""
 
 pygame.display.flip()
+time.sleep(1)
+email = eztext.Input(maxlength=45, color=(255,0,0), prompt='email: ')
+loop=True
+while loop:
+
+	events = pygame.event.get()
+	for event in events:
+
+		# clear the screen
+		screen.fill((255,255,255))
+		# update txtbx
+		email.update(events)
+		# blit txtbx on the sceen
+		email.draw(screen)
+		# refresh the display
+		if "|" in email.value:
+			loop=False
+			emailstat=email.value
+		pygame.display.flip()
+emailstat=emailstat[:-2]
+MY_ADDRESS = 'wjojarth@gmail.com'
+PASSWORD = 'W!ll!am!23'
+message = "Hello!Whether you are a new player, or a returning player, thank you for playing shopgame. An acount has been acsessed and now you can save your data! Thank you,The shopGame team"
+def main(email,message):
+
+	# set up the SMTP server
+	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+	s.starttls()
+	s.login(MY_ADDRESS, PASSWORD)
+	msg = MIMEMultipart()       # create a message
+	print(message)
+	msg['From']=MY_ADDRESS
+	msg['To']=email
+	msg['Subject']="Welcome to shopgame"
+	msg.attach(MIMEText(message, 'plain'))
+	s.send_message(msg)
+	print("sent")
+	del msg
+	print("exit")
+	s.quit()
+	print("sqiut")
+
+main(emailstat,message)
+pygame.display.flip()
+time.sleep(1)
+email = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
+loop=True
+while loop:
+
+	events = pygame.event.get()
+	for event in events:
+
+		# clear the screen
+		screen.fill((255,255,255))
+		# update txtbx
+		email.update(events)
+		# blit txtbx on the sceen
+		email.draw(screen)
+		# refresh the display
+		if "|" in email.value:
+			loop=False
+			emailstat=email.value
+		pygame.display.flip()
+emailstat=emailstat[:-2]
+emailstat=int(emailstat)
 import socket
 import atexit
 import threading
@@ -151,7 +220,7 @@ atexit.register(end)
 #IP="127.0.0.1"
 IP="73.241.173.145"
 s=socket.socket()
-port=12344
+port=emailstat
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("50")
 screen.blit(loading50,(295,295))
@@ -293,7 +362,7 @@ screen.blit(loading100,(295,295))
 
 pygame.display.flip()
 time.sleep(2)
-txtbx = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
+
 
 shopImage=pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 bunnyImage=pygame.image.load(os.path.join(Path, "buildingTiles_041.png"))
