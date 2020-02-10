@@ -143,75 +143,76 @@ def generateCustomer(possibleFoods):
 ===============client===============
 ====================================
 ===================================="""
-
-pygame.display.flip()
-time.sleep(1)
-email = eztext.Input(maxlength=45, color=(255,0,0), prompt='email: ')
-loop=True
-while loop:
-
-	events = pygame.event.get()
-	for event in events:
-		# clear the screen
-		screen.fill((255,255,255))
-		# update txtbx
-		email.update(event)
-		# blit txtbx on the sceen
-		email.draw(screen)
-		# refresh the display
-		if "|" in email.value:
-			loop=False
-			emailstat=email.value
-	pygame.display.flip()
-emailstat=emailstat[:-1]
-MY_ADDRESS = 'wjojarth@gmail.com'
-PASSWORD = 'W!ll!am!23'
-message = "Hello!Whether you are a new player, or a returning player, thank you for playing shopgame. An acount has been acsessed and now you can save your data! Thank you,The shopGame team"
-def main(email,message):
-
-	# set up the SMTP server
-	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-	s.starttls()
-	s.login(MY_ADDRESS, PASSWORD)
-	msg = MIMEMultipart()       # create a message
-	print(message)
-	msg['From']=MY_ADDRESS
-	msg['To']=email
-	msg['Subject']="Welcome to shopgame"
-	msg.attach(MIMEText(message, 'plain'))
-	s.send_message(msg)
-	print("sent")
-	del msg
-	print("exit")
-	s.quit()
-	print("sqiut")
-
-main(emailstat,message)
-pygame.display.flip()
-time.sleep(1)
-Gameid = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
-loop=True
-while loop:
-	print("in loop")
-	events = pygame.event.get()
-	print("event")
-	for event in events:
-		print("event")
-		# clear the screen
-		screen.fill((255,255,255))
-		# update txtbx
-		print("updating")
-		Gameid.update(event)
-		# blit txtbx on the sceen
-		Gameid.draw(screen)
-		# refresh the display
-		print(Gameid.value)
-		if "|" in Gameid.value:
-			loop=False
-			Gameidstat=Gameid.value
+def loginemail():
 		pygame.display.flip()
-Gameidstat=Gameidstat[:-1]
-Gameidstat=int(Gameidstat)
+		time.sleep(1)
+		email = eztext.Input(maxlength=45, color=(255,0,0), prompt='email: ')
+		loop=True
+		while loop:
+
+			events = pygame.event.get()
+			for event in events:
+				# clear the screen
+				screen.fill((255,255,255))
+				# update txtbx
+				email.update(event)
+				# blit txtbx on the sceen
+				email.draw(screen)
+				# refresh the display
+				if "|" in email.value:
+					loop=False
+					emailstat=email.value
+			pygame.display.flip()
+		emailstat=emailstat[:-1]
+		MY_ADDRESS = 'wjojarth@gmail.com'
+		PASSWORD = 'W!ll!am!23'
+		message = "Hello!Whether you are a new player, or a returning player, thank you for playing shopgame. An acount has been acsessed and now you can save your data! Thank you,The shopGame team"
+
+		# set up the SMTP server
+		s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+		s.starttls()
+		s.login(MY_ADDRESS, PASSWORD)
+		msg = MIMEMultipart()       # create a message
+		print(message)
+		msg['From']=MY_ADDRESS
+		msg['To']=emailstat
+		msg['Subject']="Welcome to shopgame"
+		msg.attach(MIMEText(message, 'plain'))
+		s.send_message(msg)
+		print("sent")
+		del msg
+		print("exit")
+		s.quit()
+		print("sqiut")
+		return emailstat
+
+def logingameid():
+	pygame.display.flip()
+	time.sleep(1)
+	Gameid = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
+	loop=True
+	while loop:
+		print("in loop")
+		events = pygame.event.get()
+		print("event")
+		for event in events:
+			print("event")
+			# clear the screen
+			screen.fill((255,255,255))
+			# update txtbx
+			print("updating")
+			Gameid.update(event)
+			# blit txtbx on the sceen
+			Gameid.draw(screen)
+			# refresh the display
+			print(Gameid.value)
+			if "|" in Gameid.value:
+				Gameidstat=Gameid.value
+				Gameidstat=Gameidstat[:-1]
+				Gameidstat=int(Gameidstat)
+				return Gameidstat
+			pygame.display.flip()
+
 import socket
 import atexit
 import threading
@@ -222,7 +223,7 @@ atexit.register(end)
 #IP="127.0.0.1"
 IP="73.241.173.145"
 s=socket.socket()
-port=Gameidstat
+port=logingameid()
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("50")
 screen.blit(loading50,(295,295))

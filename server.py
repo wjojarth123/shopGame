@@ -87,17 +87,17 @@ def listen():
 	while True:
 		client, address = s.accept()
 		send(client,tilemap)
-
-		id = playerlist.index(0)
-		if id == -1:
+		try:
+			id = playerlist.index(0)
+			send(client,"playerID"+str(id))
+			print("playerID"+str(id))
+			playerlist[id]=client
+		except:
 			id = len(playerlist)
 			send(client,"playerID"+str(id))
 			print("playerID"+str(id))
 			playerlist.append(client)
-		else:
-			send(client,"playerID"+str(id))
-			print("playerID"+str(id))
-			playerlist[id]=client
+		
 
 		print('get out of here, new guy')
 def listenForPrices():
