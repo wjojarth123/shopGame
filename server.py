@@ -57,17 +57,17 @@ def sendToAll(message):
 			else:
 				send(player,message)
 		except:
-			playerlist[player]=0
+			Replace_Player(player)
 def send(player,message):
-	message=str(message)
-	messageLength = str(len(message))
-	for i in range(4-len(messageLength)):
-		messageLength="0"+messageLength
-
-	print(messageLength)
-	print(len(message))
-	player.send(bytes(messageLength,"UTF-8"))
-	player.send(bytes(str(message),"UTF-8"))
+	if player not == 0:
+		message=str(message)
+		messageLength = str(len(message))
+		for i in range(4-len(messageLength)):
+			messageLength="0"+messageLength
+		print(messageLength)
+		print(len(message))
+		player.send(bytes(messageLength,"UTF-8"))
+		player.send(bytes(str(message),"UTF-8"))
 def end():
 	print("Closing Socket")
 	sendToAll("close")
