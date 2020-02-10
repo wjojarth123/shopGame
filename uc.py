@@ -2,15 +2,31 @@ import random
 import pygame
 import sys
 import os
+import eztext
+import time
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from string import Template
+print("imports complete")
+screen = pygame.display.set_mode((800, 600))
+windowrect=pygame.Rect(0,0,800,600)
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("screeen made")
+
 
 if getattr(sys, 'frozen', False):
 	Path = sys._MEIPASS  # This is for when the program is frozen
 else:
 	Path = os.path.dirname(__file__)  # This is when the program normally runs
-
+loading25=pygame.image.load(os.path.join(Path, "loading25%.png"))
+loading50=pygame.image.load(os.path.join(Path, "loading50%.png"))
+loading75=pygame.image.load(os.path.join(Path, "loading75%.png"))
+loading100=pygame.image.load(os.path.join(Path, "loading100%.png"))
 shopImage = pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
-
-
+print("25")
+screen.blit(loading25,(295,295))
+pygame.display.flip()
 breadImage=pygame.image.load(os.path.join(Path, "bread.png"))
 potatoImage=pygame.image.load(os.path.join(Path, "potato.png"))
 wafflesImage=pygame.image.load(os.path.join(Path, "waffles.png"))
@@ -87,9 +103,6 @@ def trade(trader, screen):
 	makeitem(sushiImage,10 + offset*7,trader,"Sushi",screen)
 	makeitem(chickenImage,10 + offset*8,trader,"Chicken",screen)
 	makeitem(roastImage,10 + offset*9,trader,"Roast Beef",screen)
-
-
-
 	if "Ad" in trader.prices:
 		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
 
@@ -130,6 +143,75 @@ def generateCustomer(possibleFoods):
 ===============client===============
 ====================================
 ===================================="""
+
+pygame.display.flip()
+time.sleep(1)
+email = eztext.Input(maxlength=45, color=(255,0,0), prompt='email: ')
+loop=True
+while loop:
+
+	events = pygame.event.get()
+	for event in events:
+		# clear the screen
+		screen.fill((255,255,255))
+		# update txtbx
+		email.update(event)
+		# blit txtbx on the sceen
+		email.draw(screen)
+		# refresh the display
+		if "|" in email.value:
+			loop=False
+			emailstat=email.value
+	pygame.display.flip()
+emailstat=emailstat[:-1]
+MY_ADDRESS = 'wjojarth@gmail.com'
+PASSWORD = 'W!ll!am!23'
+message = "Hello!Whether you are a new player, or a returning player, thank you for playing shopgame. An acount has been acsessed and now you can save your data! Thank you,The shopGame team"
+def main(email,message):
+
+	# set up the SMTP server
+	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+	s.starttls()
+	s.login(MY_ADDRESS, PASSWORD)
+	msg = MIMEMultipart()       # create a message
+	print(message)
+	msg['From']=MY_ADDRESS
+	msg['To']=email
+	msg['Subject']="Welcome to shopgame"
+	msg.attach(MIMEText(message, 'plain'))
+	s.send_message(msg)
+	print("sent")
+	del msg
+	print("exit")
+	s.quit()
+	print("sqiut")
+
+main(emailstat,message)
+pygame.display.flip()
+time.sleep(1)
+Gameid = eztext.Input(maxlength=45, color=(255,0,0), prompt='Game id: ')
+loop=True
+while loop:
+	print("in loop")
+	events = pygame.event.get()
+	print("event")
+	for event in events:
+		print("event")
+		# clear the screen
+		screen.fill((255,255,255))
+		# update txtbx
+		print("updating")
+		Gameid.update(event)
+		# blit txtbx on the sceen
+		Gameid.draw(screen)
+		# refresh the display
+		print(Gameid.value)
+		if "|" in Gameid.value:
+			loop=False
+			Gameidstat=Gameid.value
+		pygame.display.flip()
+Gameidstat=Gameidstat[:-1]
+Gameidstat=int(Gameidstat)
 import socket
 import atexit
 import threading
@@ -140,7 +222,11 @@ atexit.register(end)
 #IP="127.0.0.1"
 IP="73.241.173.145"
 s=socket.socket()
-port=12344
+port=Gameidstat
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("50")
+screen.blit(loading50,(295,295))
+pygame.display.flip()
 s.connect((IP,port))
 AyeDee=0
 tilemap = []
@@ -248,9 +334,10 @@ t1=threading.Thread(target=listen)
 t1.start()
 t2=threading.Thread(target=sendx)
 t2.start()
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("75")
+screen.blit(loading75,(295,295))
 
-
-import pygame
 import random
 import sys
 import os
@@ -263,7 +350,7 @@ starty=-100
 # tilemap=[]
 selectedtrader=0
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
+
 mealList=['Bread', 'Potatoes', 'Waffles','Spaghetti','Soup','Pizza','Ice Cream','Sushi','Chicken','Roast Beef']
 possibleFoods = mealList
 Done=False
@@ -271,6 +358,14 @@ readyToServe = False
 timeLastServed=time.time()
 servingSpeed=1
 money=100
+pygame.draw.rect(screen,(255,255,255),windowrect)
+print("100")
+screen.blit(loading100,(295,295))
+
+pygame.display.flip()
+time.sleep(2)
+
+
 shopImage=pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 bunnyImage=pygame.image.load(os.path.join(Path, "buildingTiles_041.png"))
 roadImage=pygame.image.load(os.path.join(Path, "roads.png"))
