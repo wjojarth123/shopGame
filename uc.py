@@ -205,7 +205,8 @@ while loop:
 		# blit txtbx on the sceen
 		Gameid.draw(screen)
 		# refresh the display
-		if "|" in email.value:
+		print(Gameid.value)
+		if "|" in Gameid.value:
 			loop=False
 			Gameidstat=Gameid.value
 		pygame.display.flip()
@@ -221,7 +222,7 @@ atexit.register(end)
 #IP="127.0.0.1"
 IP="73.241.173.145"
 s=socket.socket()
-port=Gamidstat
+port=Gameidstat
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("50")
 screen.blit(loading50,(295,295))

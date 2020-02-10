@@ -52,6 +52,7 @@ class Input:
             if event.key == K_BACKSPACE: self.value = self.value[:-1]
             elif event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = True
             elif event.key == K_SPACE: self.value += ' '
+            if event.key == K_RETURN and 'a' in self.restricted: self.value += '|'
             if not self.shifted:
                 if event.key == K_a and 'a' in self.restricted: self.value += 'a'
                 elif event.key == K_b and 'b' in self.restricted: self.value += 'b'
@@ -148,5 +149,3 @@ class Input:
                 elif event.key == K_COMMA and '<' in self.restricted: self.value += '<'
                 elif event.key == K_PERIOD and '>' in self.restricted: self.value += '>'
                 elif event.key == K_SLASH and '?' in self.restricted: self.value += '?'
-
-    
