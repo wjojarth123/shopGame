@@ -104,18 +104,19 @@ def listen():
 def listenForPrices():
 	while True:
 		for i in playerlist:
-			try:
-				print("running2")
-				msg=read(i)
-				print(msg)
-				msg=msg.split(";")
-				if msg[0]=="prices":
-					prices[int(msg[1])]= eval(msg[2])
-					print(prices)
-					sendToAll("np;"+msg[1]+";"+msg[2])
-			except:
-				print("playerlost!")
-				Replace_Player(i)
+			if  not player==0
+				try:
+					print("running2")
+					msg=read(i)
+					print(msg)
+					msg=msg.split(";")
+					if msg[0]=="prices":
+						prices[int(msg[1])]= eval(msg[2])
+						print(prices)
+						sendToAll("np;"+msg[1]+";"+msg[2])
+				except:
+					print("playerlost!")
+					Replace_Player(i)
 
 
 t1=threading.Thread(target=listen)
