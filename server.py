@@ -3,7 +3,8 @@ import random
 import atexit
 import threading
 import time
-def Replace_Player(playerID):
+def Replace_Player(player):
+	playerID = playerlist.index(player)
 	playerlist[playerID]=0
 from customersOperations import Customer, generateCustomer,  CustomerState
 playerlist=[]
@@ -97,7 +98,7 @@ def listen():
 			send(client,"playerID"+str(id))
 			print("playerID"+str(id))
 			playerlist.append(client)
-		
+
 
 		print('get out of here, new guy')
 def listenForPrices():
