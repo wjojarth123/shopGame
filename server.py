@@ -3,6 +3,8 @@ import random
 import atexit
 import threading
 import time
+def Replace_Player(playerID):
+	playerlist[playerID]=0
 from customersOperations import Customer, generateCustomer,  CustomerState
 playerlist=[]
 tilemap = []
@@ -83,9 +85,16 @@ def listen():
 		print('listening')
 		client, address = s.accept()
 		send(client,tilemap)
-		send(client,"playerID"+str(len(playerlist)))
-		print("playerID"+str(len(playerlist)))
-		playerlist.append(client)
+		id = playerlist.index(0)
+		if id == -1:
+			id = len(playerlist)
+			send(client,"playerID"+str(id))
+			print("playerID"+str(id))
+			playerlist.append(client)
+		else:
+			send(client,"playerID"+str(id))
+			print("playerID"+str(id))
+			playerlist[id]=client
 		print('get out of here, new guy')
 def listenForPrices():
 	while True:
@@ -101,8 +110,8 @@ def listenForPrices():
 					print(prices)
 					sendToAll("np;"+msg[1]+";"+msg[2])
 			except:
-				print("Networking error!")
-				pass
+				print("playerlost!")
+				Replace_Player(i)
 
 
 t1=threading.Thread(target=listen)
