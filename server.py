@@ -104,7 +104,7 @@ def listen():
 def listenForPrices():
 	while True:
 		for i in playerlist:
-			if  not player==0
+			if not player==0:
 				try:
 					print("running2")
 					msg=read(i)
