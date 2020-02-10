@@ -59,7 +59,7 @@ def sendToAll(message):
 		except:
 			Replace_Player(player)
 def send(player,message):
-	if player not == 0:
+	if not player  == 0:
 		message=str(message)
 		messageLength = str(len(message))
 		for i in range(4-len(messageLength)):
