@@ -1,7 +1,7 @@
 # input lib
 from pygame.locals import *
 import pygame, string
-
+all_fonts=pygame.font.get_fonts()
 class ConfigError(KeyError): pass
 
 class Config:
@@ -19,7 +19,7 @@ class Input:
     """ A text input for pygame apps """
     def __init__(self, **options):
         """ Options: x, y, font, color, restricted, maxlength, prompt """
-        self.options = Config(options, ['x', '0'], ['y', '0'], ['font', 'pygame.font.Font(None, 32)'],
+        self.options = Config(options, ['x', '0'], ['y', '0'], ['font', 'pygame.font.SysFont(all_fonts[0],24)'],
                               ['color', '(0,0,0)'], ['restricted', '\'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\\\'()*+,-./:;<=>?@[\]^_`{|}~\''],
                               ['maxlength', '-1'], ['prompt', '\'\''])
         self.x = self.options.x; self.y = self.options.y

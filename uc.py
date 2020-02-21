@@ -185,7 +185,7 @@ def loginemail():
 		s.quit()
 		print("sqiut")
 		return emailstat
-
+loginemail()
 def logingameid():
 	pygame.display.flip()
 	time.sleep(1)
@@ -221,7 +221,7 @@ def end():
 	s.close()
 atexit.register(end)
 #IP="127.0.0.1"
-IP="73.241.173.145"
+IP="127.0.0.1"
 s=socket.socket()
 port=logingameid()
 pygame.draw.rect(screen,(255,255,255),windowrect)
@@ -313,6 +313,7 @@ def listen():
 	global updatedPrices
 	while True:
 		m=read()
+		print(m)
 		if m.startswith("customers"):
 			m = m[9:]
 			print(m)
@@ -326,7 +327,6 @@ def listen():
 			m=m.split(";")
 			allPlayersPrices[int(m[1])+1]=eval(m[2])
 			updatedPrices=True
-		print(m)
 def sendx():
 	while True:
 		time.sleep(1)

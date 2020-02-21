@@ -52,14 +52,18 @@ s.listen(5)
 def sendToAll(message):
 	for player in playerlist:
 		try:
-			if playerlist[player] == 0:
+			if player == 0:
 				pass
 			else:
 				send(player,message)
-		except:
+		except Exception as e:
+			print(e)
+			print("AAAAAA")
 			Replace_Player(player)
 def send(player,message):
 	if not player  == 0:
+		print("sending",message)
+
 		message=str(message)
 		messageLength = str(len(message))
 		for i in range(4-len(messageLength)):
@@ -126,7 +130,7 @@ t2.start()
 
 sendToAll(str(tilemap))
 
-while len(playerlist) >= 2:
+while True:
 	# print(prices)l
 	if time.time()-customerSpawnTime>=random.randint(1,3):
 		sendToAll("customers"+str(generateCustomer(possibleFoods)))
