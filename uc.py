@@ -221,7 +221,7 @@ def end():
 	s.close()
 atexit.register(end)
 #IP="127.0.0.1"
-IP="127.0.0.1"
+IP="73.241.173.145"
 s=socket.socket()
 port=logingameid()
 pygame.draw.rect(screen,(255,255,255),windowrect)
