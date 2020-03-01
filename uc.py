@@ -8,7 +8,18 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from string import Template
+import csv
 print("imports complete")
+def readData():
+	global prices
+	global stock
+	global money
+	with open('shopGame.csv', newline='') as csvfile:
+		datareader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+		prices = eval(datareader.__next__()[0])
+		stock = eval(datareader.__next__()[0])
+		money =float(datareader.__next__()[0])
+
 screen = pygame.display.set_mode((800, 600))
 windowrect=pygame.Rect(0,0,800,600)
 pygame.draw.rect(screen,(255,255,255),windowrect)
@@ -71,7 +82,6 @@ class Trader:
 
 text=''
 def makeitem(image,y,trader,item,screen):
-	print(trader.prices)
 	screen.blit(image,(610,y))
 	screen.blit(buyImage,(700,y-10))
 	textsurface=myfont.render(str(trader.prices[item]),False,(0,0,0))
@@ -88,7 +98,6 @@ def generateTrader(x, y, possibleFoods, rect,run,p=None):
 	trader = Trader(traderPrices,x,y,rect)
 	return trader
 def trade(trader, screen):
-	print(trader.prices)
 	windowrect=pygame.Rect(600,0,200,430)
 	pygame.draw.rect(screen,(255,255,255),windowrect)
 	offset = 37
@@ -185,7 +194,7 @@ def loginemail():
 		s.quit()
 		print("sqiut")
 		return emailstat
-loginemail()
+#loginemail()
 def logingameid():
 	pygame.display.flip()
 	time.sleep(1)
@@ -205,7 +214,6 @@ def logingameid():
 			# blit txtbx on the sceen
 			Gameid.draw(screen)
 			# refresh the display
-			print(Gameid.value)
 			if "|" in Gameid.value:
 				Gameidstat=Gameid.value
 				Gameidstat=Gameidstat[:-1]
@@ -220,8 +228,8 @@ import time
 def end():
 	s.close()
 atexit.register(end)
-#IP="127.0.0.1"
-IP="73.241.173.145"
+IP="127.0.0.1"
+#IP="73.241.173.145"
 s=socket.socket()
 port=logingameid()
 pygame.draw.rect(screen,(255,255,255),windowrect)
@@ -304,19 +312,15 @@ def send(message):
 	for i in range(4-len(messageLength)):
 		messageLength="0"+messageLength
 
-	print(messageLength)
-	print(len(message))
-	print(message)
+
 	s.send(bytes(messageLength,"UTF-8") + bytes(message,"UTF-8"))
 def listen():
 	global AyeDee
 	global updatedPrices
 	while True:
 		m=read()
-		print(m)
 		if m.startswith("customers"):
 			m = m[9:]
-			print(m)
 			newCustomers.append(fromString(m))
 		elif m.startswith("playerID"):
 			m = int(m[8:])
@@ -332,8 +336,10 @@ def sendx():
 		time.sleep(1)
 		#send("foo")
 t1=threading.Thread(target=listen)
+t1.setDaemon(True)
 t1.start()
 t2=threading.Thread(target=sendx)
+t2.setDaemon(True)
 t2.start()
 pygame.draw.rect(screen,(255,255,255),windowrect)
 print("75")
@@ -498,7 +504,13 @@ def moveCustomers():
 selectedtrader=LOT[0]
 
 checkTiming = False
-
+def saveData():
+	with open('shopGame.csv', 'w', newline='') as csvfile:
+		datawriter = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+		datawriter.writerow([prices])
+		datawriter.writerow([stock])
+		datawriter.writerow([money])
+readData()
 '''
 =======================================
 =======================================
@@ -525,13 +537,12 @@ while not Done:
 		print("map drawing took " + str(t2 - t) + 'seconds')
 
 	for event in pygame.event.get():
+		print("event")
 		if event.type == pygame.QUIT:
+			print("quitting")
+			saveData()
 			done = True
-			pygame.display.update
-			pygame.quit()
-			exit()
-			sysExit(0)
-			Exit()
+			sys.exit(0)
 		if event.type==pygame.MOUSEBUTTONDOWN:
 			clicked=True
 			mousePos=pygame.mouse.get_pos()
@@ -546,7 +557,6 @@ while not Done:
 		if mouseRect.colliderect(buyrect) and clicked and money> selectedtrader.prices[possibleFoods[i]] and selectedtrader.prices[possibleFoods[i]]>10:
 			if not selectedtrader.item=='Ad':
 				stock[possibleFoods[i]] += 1
-				print("buy"+selectedtrader.item)
 				money-=selectedtrader.prices[possibleFoods[i]]
 			else:
 				amountOfads+=20
@@ -585,7 +595,6 @@ while not Done:
 		#rect = pygame.Rect(i.x,i.y,10,10)
 		#pygame.draw.rect(screen, (0, 0,255 -  possibleFoods.index(i.desiredMeal)*(255/len(possibleFoods))), rect)
 	# print("")
-	print(selectedtrader.prices)
 	for meal in mealList:
 		drawSlider(meal,mousePos,clicked)
 	textsurface=myfont.render("Money: "+str(round(money, 2)),False,(255,255,255))
