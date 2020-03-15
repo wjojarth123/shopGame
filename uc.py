@@ -121,7 +121,7 @@ from enum import Enum
 CustomerState = Enum('CustomerState', 'onStreet goingToShop waiting leavingShop')
 class Customer:
 	x=-10
-	y=205
+	y=180
 	budget = 5
 	desiredMeal = ['Waffles']
 	state = CustomerState.onStreet
@@ -137,7 +137,8 @@ def fromString(str):
 	customerlist=str.split(', ')
 	customer = Customer('foo', 'bar')
 	customer.x=int(customerlist[0])
-	customer.y=int(customerlist[1])
+	#customer.y=int(customerlist[1])
+	customer.y=int(customerlist[1])-15
 	customer.budget=int(customerlist[2])
 	customer.desiredMeal=customerlist[3]
 	return customer
@@ -321,6 +322,7 @@ def listen():
 		m=read()
 		if m.startswith("customers"):
 			m = m[9:]
+			print(m)
 			newCustomers.append(fromString(m))
 		elif m.startswith("playerID"):
 			m = int(m[8:])
@@ -352,6 +354,8 @@ from enum import Enum
 LOT=[]
 mapx=15
 mapy=50
+xoffset=0
+yoffset=-25
 startx=-1500
 starty=-100
 # tilemap=[]
@@ -471,7 +475,7 @@ draw map
 def drawmapI():
 	for i in range(mapy):
 		for o in range(mapx):
-			screen.blit(imageList[tilemap[i][o]],(o*132+i*66+startx,i*33+starty-imageList[tilemap[i][o]].get_rect().size[1]))
+			screen.blit(imageList[tilemap[i][o]],(o*130.5+i*64.5+startx+xoffset,i*31.5+starty-imageList[tilemap[i][o]].get_rect().size[1]+yoffset))
 
 def moveCustomers():
 	#print("attempting to move",)
@@ -521,6 +525,16 @@ while loop
 
 drawmapI()
 while not Done:
+	screen.fill((0,0,0))
+	keys=pygame.key.get_pressed()
+	if keys[pygame.K_UP]:
+		yoffset+=10
+	if keys[pygame.K_DOWN]:
+		yoffset-=10
+	if keys[pygame.K_LEFT]:
+		xoffset+=10
+	if keys[pygame.K_RIGHT]:
+		xoffset-=10
 	if updatedPrices:
 		for i in range(0,5):
 			LOT[i].prices=allPlayersPrices[i]
@@ -588,7 +602,7 @@ while not Done:
 		if i.x>=600 and i.state==CustomerState.goingToShop:
 			print("h")
 			i.state = CustomerState.waiting
-		screen.blit(carImage,(i.x,i.y))
+		screen.blit(carImage,(i.x+xoffset,i.y+yoffset))
 	if checkTiming:
 		t5=time.time()
 		print("trader Handling took " + str(t5 - t4) + 'seconds')
