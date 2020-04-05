@@ -1,4 +1,3 @@
-import random
 import pygame
 import sys
 import os
@@ -9,7 +8,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from string import Template
 import csv
+import socket
+import atexit
+import threading
+import time
+import random
+from enum import Enum
 print("imports complete")
+
+
+
+# Functions
 def readData():
 	global prices
 	global stock
@@ -34,7 +43,6 @@ loading25=pygame.image.load(os.path.join(Path, "loading25%.png"))
 loading50=pygame.image.load(os.path.join(Path, "loading50%.png"))
 loading75=pygame.image.load(os.path.join(Path, "loading75%.png"))
 loading100=pygame.image.load(os.path.join(Path, "loading100%.png"))
-shopImage = pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
 print("25")
 screen.blit(loading25,(295,295))
 pygame.display.flip()
@@ -116,8 +124,7 @@ def trade(trader, screen):
 		makeitem(adImage,10 + offset*10,trader,"Ad",screen)
 
 priceOfitem=0
-import random
-from enum import Enum
+
 CustomerState = Enum('CustomerState', 'onStreet goingToShop waiting leavingShop')
 class Customer:
 	x=-10
@@ -136,9 +143,9 @@ class Customer:
 def fromString(str):
 	customerlist=str.split(', ')
 	customer = Customer('foo', 'bar')
-	customer.x=int(customerlist[0])
+	customer.x=int(customerlist[0])-650
 	#customer.y=int(customerlist[1])
-	customer.y=int(customerlist[1])-15
+	customer.y=int(customerlist[1])-150
 	customer.budget=int(customerlist[2])
 	customer.desiredMeal=customerlist[3]
 	return customer
@@ -222,10 +229,7 @@ def logingameid():
 				return Gameidstat
 			pygame.display.flip()
 
-import socket
-import atexit
-import threading
-import time
+
 def end():
 	s.close()
 atexit.register(end)
@@ -347,13 +351,10 @@ pygame.draw.rect(screen,(255,255,255),windowrect)
 print("75")
 screen.blit(loading75,(295,295))
 
-import random
-import sys
-import os
-from enum import Enum
+
 LOT=[]
-mapx=15
-mapy=50
+mapx=31
+mapy=31
 xoffset=0
 yoffset=-25
 startx=-1500
@@ -377,21 +378,33 @@ pygame.display.flip()
 time.sleep(2)
 
 
-shopImage=pygame.image.load(os.path.join(Path, "buildingTiles_113.png"))
-bunnyImage=pygame.image.load(os.path.join(Path, "buildingTiles_041.png"))
-roadImage=pygame.image.load(os.path.join(Path, "roads.png"))
-treeImage=pygame.image.load(os.path.join(Path, "cityTiles_067.png"))
-groundImage=pygame.image.load(os.path.join(Path, "cityTiles_066.png"))
-grassImage=pygame.image.load(os.path.join(Path, "cityTiles_066.png"))
-busImage=pygame.image.load(os.path.join(Path, "cityTiles_002.png"))
-Image=pygame.image.load(os.path.join(Path, "cityTiles_073.png"))
-ourImage=pygame.image.load(os.path.join(Path, "buildingTiles_100.png"))
+shopup=pygame.image.load(os.path.join(Path, "shopup.png"))
+shopdown=pygame.image.load(os.path.join(Path, "shopdown.png"))
+shopright=pygame.image.load(os.path.join(Path, "shopright.png"))
+shopleft=pygame.image.load(os.path.join(Path, "shopleft.png"))
+traderup=pygame.image.load(os.path.join(Path, "traderup.png"))
+traderdown=pygame.image.load(os.path.join(Path, "traderdown.png"))
+traderleft=pygame.image.load(os.path.join(Path, "traderleft.png"))
+traderright=pygame.image.load(os.path.join(Path, "traderright.png"))
+grass=pygame.image.load(os.path.join(Path, "grassimg.png"))
+leftT=pygame.image.load(os.path.join(Path, "Tleft.png"))
+rightT=pygame.image.load(os.path.join(Path, "Tright.png"))
+upT=pygame.image.load(os.path.join(Path, "Tup.png"))
+downT=pygame.image.load(os.path.join(Path, "Tdown.png"))
 carImage=pygame.image.load(os.path.join(Path, "carBlue2_003.png"))
+FW=pygame.image.load(os.path.join(Path, "4w.png"))
+upright=pygame.image.load(os.path.join(Path, "11.png"))
+downright=pygame.image.load(os.path.join(Path, "13.png"))
+upleft=pygame.image.load(os.path.join(Path, "12.png"))
+downleft=pygame.image.load(os.path.join(Path, "14.png"))
+vertroad=pygame.image.load(os.path.join(Path, "roadvert.png"))
+horiroad=pygame.image.load(os.path.join(Path, "roadhori.png"))
 pygame.font.init()
 all_fonts=pygame.font.get_fonts()
 myfont=pygame.font.SysFont(all_fonts[0],16)
 t=time.time()
-imageList=[busImage,roadImage,grassImage,groundImage,treeImage,shopImage,Image,ourImage,carImage,bunnyImage]
+#imglist[green,shopright,shopleft,shopdown,shopup,houseright,houseleft,housedown,houseup,leftT,rightT,FW,upright,downright,downleft,upleft,vertroad,horiroad]
+imageList=[grass,shopright,shopleft,shopdown,shopup,traderright,traderleft,traderdown,traderup,leftT,rightT,FW,upright,downright,downleft,downright,vertroad,horiroad,downT,upT]
 stock =	{
   "Potatoes": 5,
   "Bread": 6,
@@ -472,10 +485,20 @@ draw map
 =======================================
 =======================================
 '''
+print(len(tilemap))
+print(len(tilemap[1]))
 def drawmapI():
 	for i in range(mapy):
-		for o in range(mapx):
-			screen.blit(imageList[tilemap[i][o]],(o*130.5+i*64.5+startx+xoffset,i*31.5+starty-imageList[tilemap[i][o]].get_rect().size[1]+yoffset))
+		print("i="+str(i))
+		for o in range(mapx-1,-1,-1):
+			print(o)
+			print(tilemap[i][o])
+			print("bla")
+			print(len(tilemap))
+			print(len(tilemap[i]))
+			print("yay")
+			#screen.blit(imageList[tilemap[i][o]],(o*130.5+i*64.5+startx+xoffset,i*31.5+starty-imageList[tilemap[i][o]].get_rect().size[1]+yoffset))
+			screen.blit(imageList[tilemap[i][o]],(o*65.25+i*64.5+startx+xoffset,i*31.5+starty-imageList[tilemap[i][o]].get_rect().size[1]+yoffset+o*-32))
 
 def moveCustomers():
 	#print("attempting to move",)
@@ -579,7 +602,7 @@ while not Done:
 		if LOT[i].rect.contains(pygame.Rect(mousePos[0], mousePos[1], 1, 1)) and clicked:
 			selectedtrader=LOT[i]
 
-	trade(selectedtrader,screen)
+
 	if checkTiming:
 		t4=time.time()
 		print("trader Handling took " + str(t4 - t3) + 'seconds')
@@ -618,6 +641,7 @@ while not Done:
 		screen.blit(textsurface,(5,(i+1)*15))
 	textsurface=myfont.render('Amount of ads:'+str(amountOfads),False,(255,255,255))
 	screen.blit(textsurface,(5,165))
+	trade(selectedtrader,screen)
 	pygame.display.flip()
 	if money<=0:
 		print("you  loser, you just lost again!!!!!")
